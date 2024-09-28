@@ -23,7 +23,7 @@ import java.sql.DriverManager;
 @EnableTransactionManagement
 public class webAppRootConfig {
     @Bean
-    public DataSource dataSource() {
+    public DataSource dataSource() {//database connectivity
         var dmds =new DriverManagerDataSource();
         dmds.setDriverClassName("com.mysql.cj.jdbc.Driver");
         dmds.setUrl("jdbc:mysql://localhost:3306/noteCollector?createDatabaseIfNotExist=true");

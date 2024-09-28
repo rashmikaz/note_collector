@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("api/V1/users")
@@ -19,9 +20,9 @@ public class UserController {
             @RequestPart ("lastName") String lastName,
             @RequestPart ("email") String email,
             @RequestPart ("password") String password,
-            @RequestPart ("profilePic") String profilePic
+            @RequestPart ("profilePic")MultipartFile profilePic
 
-    ){
+            ){
 
         System.out.println("RAW pro pic "+profilePic);
         // profilePic ----> Base64
@@ -44,7 +45,7 @@ public class UserController {
         buildUserDTO.setLastName(lastName);
         buildUserDTO.setEmail(email);
         buildUserDTO.setPassword(password);
-        buildUserDTO.setProfilePic(profilePic);
+        buildUserDTO.setProfilePic(base64ProPic);
 
         return buildUserDTO;
     }
