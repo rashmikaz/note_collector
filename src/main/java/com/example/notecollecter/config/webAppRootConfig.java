@@ -26,7 +26,7 @@ public class webAppRootConfig {
 
     @Bean
     public ModelMapper modelMapper(){
-        return modelMapper();
+        return new ModelMapper();
     }
 
     @Bean
