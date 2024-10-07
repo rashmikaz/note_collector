@@ -14,7 +14,6 @@ import java.util.List;
 @Data
 @Entity
 @Table(name = "user")
-
 public class UserEntity implements SuperEntity {
     @Id
     private String userId;
@@ -23,6 +22,7 @@ public class UserEntity implements SuperEntity {
     @Column(unique = true)
     private String email;
     private String password;
+    @Column(columnDefinition = "LONGTEXT")
     private String profilePic;
     @OneToMany(mappedBy = "user")
     private List<NoteEntity> notes;

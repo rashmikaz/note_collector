@@ -1,19 +1,20 @@
 package com.example.notecollecter.service;
 
+import com.example.notecollecter.dto.UserStatus;
 import com.example.notecollecter.dto.impl.UserDTO;
 
 import java.util.List;
 
 public interface UserService {
-    UserDTO saveUser(UserDTO userDTO);
+    void saveUser(UserDTO userDTO);
 
     List<UserDTO>getAllUsers();
 
-    UserDTO getUser(String UserId);
+    UserStatus getUser(String UserId);
 
-    boolean deleteUser(String UserId);
+    void deleteUser(String UserId);
 
-    boolean updateUser(String UserId,UserDTO userDTO);
+    void updateUser(String UserId,UserDTO userDTO);
 
 
 }

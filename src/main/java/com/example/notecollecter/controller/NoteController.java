@@ -1,9 +1,16 @@
 package com.example.notecollecter.controller;
 
+import com.example.notecollecter.customStatusCodes.SelectedUserAndNoteErrorStatus;
+import com.example.notecollecter.dto.NoteStatus;
 import com.example.notecollecter.dto.impl.NoteDTO;
-import com.example.notecollecter.service.NotService;
+import com.example.notecollecter.exception.DataPersistException;
+import com.example.notecollecter.exception.NoteNotFoundException;
+import com.example.notecollecter.service.NoteService;
+import com.example.notecollecter.utill.RegexProcess;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -13,30 +20,67 @@ import java.util.List;
 public class NoteController {//http request handle by this class and all are public method
 
     @Autowired
-    private NotService notService;
+    private NoteService noteService;
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public NoteDTO saveNote(@RequestBody NoteDTO noteDTO) {
-//        noteDTO.setNoteId(Apputil.generateId());
-//        return noteDTO;
-        return notService.saveNote(noteDTO);
-    }
-    public NoteDTO getSelectedNote(){
+    public ResponseEntity<Void> saveNote(@RequestBody NoteDTO noteDTO) {
 
-        return null;
+        try{
+            noteService.saveNote(noteDTO);
+            return new ResponseEntity<>(HttpStatus.CREATED);
+        }catch (DataPersistException e){
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }catch (Exception e){
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+
+        }
     }
+    @GetMapping(value = "/{noteID}",produces = MediaType.APPLICATION_JSON_VALUE)
+    public NoteStatus getSelectedNote(@PathVariable ("noteID") String noteId){
+        if (!RegexProcess.noteIdMatcher(noteId)) {
+            return new SelectedUserAndNoteErrorStatus(1,"Note ID is not valid");
+        }
+        return noteService.getNote(noteId);
+    }
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public List<NoteDTO> getALlNotes(){
-
-        return null;
+        return noteService.getAllNotes();
     }
-    public void deleteNote(String noteId){
-
+    @DeleteMapping(value = "/{noteId}")
+    public ResponseEntity<Void> deleteNote(@PathVariable ("noteId") String noteId){
+        try {
+            if (!RegexProcess.noteIdMatcher(noteId)) {
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+            noteService.deleteNote(noteId);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }catch (NoteNotFoundException e){
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }catch (Exception e){
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
-    public void updateNote(String noteId,NoteDTO noteDTO){
-
+    @PutMapping(value = "/{noteId}")
+    public ResponseEntity<Void> updateNote(@PathVariable ("noteId") String noteId,
+                                           @RequestBody NoteDTO updatedNoteDTO){
+        //validations
+        try {
+            if(!RegexProcess.noteIdMatcher(noteId) || updatedNoteDTO == null){
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+            noteService.updateNote(noteId,updatedNoteDTO);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }catch (NoteNotFoundException e){
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }catch (Exception e){
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
-
-
-
 }

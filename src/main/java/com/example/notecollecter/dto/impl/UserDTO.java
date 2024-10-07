@@ -1,7 +1,8 @@
 package com.example.notecollecter.dto.impl;
 
 
-import com.example.notecollecter.dto.SuperDto;
+import com.example.notecollecter.dto.SuperDTO;
+import com.example.notecollecter.dto.UserStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,7 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class UserDTO implements SuperDto {
+public class UserDTO implements UserStatus {
 
     private String userId;
     private String firstName;

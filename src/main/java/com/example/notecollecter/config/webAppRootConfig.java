@@ -1,6 +1,7 @@
 package com.example.notecollecter.config;
 
 import jakarta.persistence.EntityManagerFactory;
+import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -19,9 +20,15 @@ import java.sql.DriverManager;
 
 @Configuration
 @ComponentScan(basePackages = "com.example.notecollecter")
-@EnableJpaRepositories
+@EnableJpaRepositories(basePackages = "com.example.notecollecter.dao")
 @EnableTransactionManagement
 public class webAppRootConfig {
+
+    @Bean
+    public ModelMapper modelMapper(){
+        return modelMapper();
+    }
+
     @Bean
     public DataSource dataSource() {//database connectivity
         var dmds =new DriverManagerDataSource();
@@ -41,7 +48,7 @@ public class webAppRootConfig {
 
         LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();
         factory.setJpaVendorAdapter(vendorAdapter);
-        factory.setPackagesToScan("com.example.notecollecter.entity");
+        factory.setPackagesToScan("com.example.notecollecter.entity.Impl");
         factory.setDataSource(dataSource());
         return factory;
     }
