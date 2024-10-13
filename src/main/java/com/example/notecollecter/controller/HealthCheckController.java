@@ -7,8 +7,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("api/v1/health")
+
 public class HealthCheckController {
 
+
+   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public String healthTest(){
 
         return "note controller is working";
